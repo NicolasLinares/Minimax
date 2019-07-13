@@ -12,7 +12,7 @@ class Arbol {
 
 		Nodo * raiz;
 
-        void crearArbolMinimax(Nodo * raiz);
+        void crearArbolMinimax(Tabla3R * tabla);
 
         void recorrerArbol();
         void recorridoPreorden(Nodo * n);
@@ -27,7 +27,8 @@ class Arbol {
 		Arbol (Tabla3R * tabla);
 		~Arbol ();
 
-		Nodo * getJugada();
+		Nodo * getMejorNodo();
+
 
 };
 

@@ -8,13 +8,20 @@ using namespace std;
 
 
 
+bool comprobarHuecosLibres(Tabla3R * tabla){
+    if (tabla->getHuecosLibres() > 0) return true;
+    else return false;
+}
+
 // TURNO DE LA IA (MAQUINA)
 Tabla3R * jugarPartidaMAX(Tabla3R * tabla){
 
     cout << endl << "   Turno de la IA [X]" << endl << endl;
     Arbol * arbol = new Arbol(tabla);
 
-    return arbol->getJugada()->getTabla(); // me devuelve el nodo que contiene la tabla con el movimiento mas favorable para MAX  
+    Nodo * nodo = arbol->getMejorNodo();
+ 
+    return nodo->getTabla(); // me devuelve el nodo que contiene la tabla con el movimiento mas favorable para MAX 
 }
 
 
@@ -22,33 +29,42 @@ Tabla3R * jugarPartidaMAX(Tabla3R * tabla){
 Tabla3R * jugarPartidaMIN(Tabla3R * tabla){
 
     cout << endl << "   *TU TURNO [O]*" << endl << endl;
-    cout << "Elige la posicion que deseas marcar <fila [0,1,2]>  <columna [0,1,2]> :" ;
-
+    
     int fila =0;
-    int columna = 0;
-    cin >> fila;
-    cin >> columna;
+	int columna = 0;
+	
+    while (true) {
+		cout << "Elige la posicion que deseas marcar <fila [0,1,2]>  <columna[0,1,2]> :" ;
+
+		cin >> fila;
+		cin >> columna;
+		
+		if (!tabla->isMarcada(fila, columna))
+			break;
+		else
+			cout << "Esa casilla esta ocupada, elige otra..." << endl;
+	}
 
     cout << endl << endl;
     tabla->marcarTabla(fila, columna, 'O');
-    
+
     return tabla;
 }
 
 
-bool comprobarTabla(Tabla3R * tabla){
+bool comprobarGanador(Tabla3R * tabla){
 
-    if (tabla->comprobarJugada('X')){
+    if (tabla->getGanador('X')){
         cout << endl << endl << "**************" << endl;
         cout << "* Gana la IA *" << endl;
         cout << "**************" << endl;
         return true;
-    }else if (tabla->comprobarJugada('O')){
+    }else if (tabla->getGanador('O')){
         cout << endl << endl << "**************" << endl;
         cout << "*  Tu ganas  *" << endl;
         cout << "**************" << endl;
         return true;
-    }else if (tabla->getHuecosLibres() == 0){ // si no quedan mas huecos en la tabla es empate porque no ha dado un ganador
+    }else if (!comprobarHuecosLibres(tabla)){ // si no quedan mas huecos en la tabla es empate porque no ha dado un ganador
         cout << endl << endl << "**************" << endl;
         cout << "*   EMPATE   *" << endl;
         cout << "**************" << endl;
@@ -65,18 +81,17 @@ int main(int argc, char **argv)
     Tabla3R * tabla = new Tabla3R();
     tabla->mostrarTabla();
 
-    int turno = 1;
+    while (!comprobarGanador(tabla)) {
+        //tabla = jugarPartidaMIN(tabla);   // cambiar por la línea siguiente si queremos que empiece primero la máquina
+        tabla = jugarPartidaMAX(tabla);   
+        tabla->mostrarTabla();
 
-    while (!comprobarTabla(tabla)) {
-        if (turno == 1){
+        if (!comprobarGanador(tabla)){
+            //tabla = jugarPartidaMAX(tabla);  // cambiar por la línea siguiente si queremos que continue el usuario
             tabla = jugarPartidaMIN(tabla);
-            turno = 2;
-        }else{
-            tabla = jugarPartidaMAX(tabla);
-            turno = 1;
-        }         
-
-        tabla->mostrarTabla();   
+            tabla->mostrarTabla();
+        } else
+            break;
     }
 
     delete tabla;

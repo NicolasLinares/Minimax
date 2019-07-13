@@ -6,16 +6,11 @@ const int INFINITO = 99999;
 
 
 //-------------------------CONSTRUCTOR-------------------------
-Nodo::Nodo(Tabla3R * tab, int t){
+Nodo::Nodo(){
 
-    tabla = new Tabla3R();
-    tab->clonarTabla(tab, tabla);
-
-    nHijos = 0;
-    turno = t;
+    tabla = NULL;
     beneficio = 0;
 }
-
 
 //-------------------------DESTRUCTOR-------------------------
 Nodo::~Nodo() {
@@ -28,44 +23,34 @@ Nodo::~Nodo() {
 
 //-------------------------METODOS-------------------------
 
-void Nodo::inicializarHijos(){
-    
-    //inicializa los hijos (se debe hacer después de que la tabla se marca con la nueva jugada)
-    hijos[tabla->getHuecosLibres()];  // El tamanio de la tabla que almacena el nodo (es decir el no de nodos hijos que tiene) viene condicionado por el no de huecos libres de la tabla actual
-    for (int i = 0; i < tabla->getHuecosLibres(); i++)
+void Nodo::setParametros(Tabla3R * tab){
+
+    tabla = tab;
+    beneficio = 0;
+    hijos[tab->getHuecosLibres()];  // El tamanio de la tabla que almacena el nodo (es decir el no de nodos hijos que tiene) viene condicionado por el no de huecos libres de la tabla actual
+
+    for (int i = 0; i < tab->getHuecosLibres(); i++)
         hijos[i] = NULL;
+
 }
 
+void Nodo::setTablaMAX(Tabla3R * tablaRaiz, int fila, int columna, char marca ) {
 
-void Nodo::marcarTabla(int fila, int columna, char marca ) {
-
+    //creamos una copia de la tabla padre
+    Tabla3R * nuevaTabla = new Tabla3R();
+    tablaRaiz->clonarTabla(tablaRaiz, nuevaTabla);
     //le insertamos la marca en esa posicion
-    tabla->marcarTabla(fila, columna, marca);
-    
-    int valorJugada = tabla->comprobarJugada(fila,columna, marca); // esta comprobacion permite podar el arbol si MAX gana en ese nodo o si lo pierde, al que se le asigna un beneficio positivo
-    
-    setBeneficio(valorJugada);
+    nuevaTabla->marcarTabla(fila, columna, marca);
+
+    setParametros(nuevaTabla);
 }
 
 Nodo * Nodo::getHijo(int i){
     return hijos[i];
 }
 
-void Nodo::setHijo(Nodo * n){
-    
-    int i = 0;
-
-    if (i == 9) cout << "no quedan huecos en el nodo para añadir al hijo" << endl;
-
-    while (i< 9){
-        if (hijos[i] == NULL){
-            hijos[i] = n;
-            nHijos++;
-            break;
-        }
-        i++;
-    }
-    
+void Nodo::setHijo(int i, Nodo * n){
+    hijos[i] = n;
 }
 
 Tabla3R * Nodo::getTabla(){
@@ -81,14 +66,20 @@ void Nodo::setBeneficio(int b) {
     beneficio = b;
 }
 
-int Nodo::getTurno(){
-    return turno;
-}
-
-int Nodo::getNumeroHijos(){
-    return nHijos;
-}
-
 bool Nodo::isTerminal(){
     return (hijos[0] == NULL); // si uno de los hijos es NULL entonces es terminal
 }
+
+
+// HEURISTICA UTILIZADA PARA ESTE TIPO DE MINIMAX DONDE SOLO SE REALIZA UN ARBOL DE PROFUNDIDAD 2
+void Nodo::setUtilidad(){
+
+    // esta comprobacion es necesaria puesto que si no ponemos -INFINITO cuando el jugador MIN tiene posibilidad de ganar
+    // entonces el jugador MAX (la IA) es posible que no lo tenga en cuenta y se le pase bloquear este movimiento ganador
+    if (tabla->getGanador('O')) {
+        setBeneficio(-INFINITO);
+    }else
+        setBeneficio(tabla->calcularLineas('X') - tabla->calcularLineas('O')); //MAX - MIN
+}
+
+

@@ -13,33 +13,27 @@ class Nodo {
 
 		int beneficio;  // beneficio usado para saber si sera escogido como opcion
         Tabla3R * tabla;
-        Nodo * hijos[9]; // poniendo el 9 ha dejado de fallar en cuanto a memoria basura (9 es el maximo numero de hijos que puede tener)
-        int nHijos;
-        int turno; //sirve para que a la hora de crear el arbol se pueda recordar el turno al retroceder a otro nodo
-
-
+        Nodo * hijos[9]; // poniendo el 9 ha dejado de fallar en cuanto a memoria basura
 
 	public:
 
-		Nodo(Tabla3R * tab, int t);
+		Nodo();
 		~Nodo();
 
+        void setParametros(Tabla3R * tab);
 
-        void inicializarHijos();
-        
-        void marcarTabla(int fila, int columna, char marca);
+        void setTablaMAX(Tabla3R * tablaRaiz, int fila, int columna, char marca);
 
-        void setHijo(Nodo *n);
+        void setHijo(int i, Nodo *n);
         Nodo * getHijo(int i);
         Tabla3R * getTabla();
-
-        int getTurno();
-        int getNumeroHijos();
 
         int getBeneficio();
         void setBeneficio(int b);
 
         bool isTerminal();
+        void setUtilidad();
+
 };
 
 #endif // NODO_H

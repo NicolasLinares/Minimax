@@ -9,13 +9,6 @@ class Tabla3R
         char  t[3][3];
         int huecos;
 
-
-        bool comprobarFilas(int fila, char marca);
-        bool comprobarColumnas(int columna, char marca);
-        bool comprobarDiagonales(int fila, int columna, char marca);
-        bool diagonal1(char marca);
-        bool diagonal2(char marca);
-
     public:
         Tabla3R(void);
 
@@ -26,13 +19,14 @@ class Tabla3R
         int getHuecosLibres();
 
         void marcarTabla(int x, int y, char marca);
-
-        int comprobarJugada(int fila, int columna, char marca);
-        bool comprobarJugada(char marca);
+	bool isMarcada(int x, int y);
 
         void clonarTabla(Tabla3R * t1, Tabla3R * t2); //copia t1 en t2
-        
         void mostrarTabla();
+
+        int calcularLineas(char marca);
+        bool getGanador(char marca);
+
 };
 
 
