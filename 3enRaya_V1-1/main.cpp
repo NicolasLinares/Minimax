@@ -78,20 +78,33 @@ bool comprobarGanador(Tabla3R * tabla){
 
 int main(int argc, char **argv)
 {
+	
+	
+	cout << "----------------------------  ELECCION DE TURNO  ----------------------------" << endl;
+	cout << "Teclea [1] para ser el primero en jugar o [2] para que empiece la maquina: ";
+	
+	int turno = 1;
+	cin >> turno;
+	
+	if (turno != 1 || turno != 2)
+		turno = 2; // si se ha escrito mal le damos el turno a la maquina
+		
+	cout << "---------------------------------------------------------------------------" << endl;
+	
     Tabla3R * tabla = new Tabla3R();
-    tabla->mostrarTabla();
 
     while (!comprobarGanador(tabla)) {
-        //tabla = jugarPartidaMIN(tabla);   // cambiar por la línea siguiente si queremos que empiece primero la máquina
-        tabla = jugarPartidaMAX(tabla);   
-        tabla->mostrarTabla();
-
-        if (!comprobarGanador(tabla)){
-            //tabla = jugarPartidaMAX(tabla);  // cambiar por la línea siguiente si queremos que continue el usuario
-            tabla = jugarPartidaMIN(tabla);
-            tabla->mostrarTabla();
-        } else
-            break;
+		
+		if (turno == 1){
+			tabla = jugarPartidaMIN(tabla); // turno humano
+			turno = 2;
+		}else{
+			tabla = jugarPartidaMAX(tabla); // turno maquina
+			turno = 1;
+		}        
+		
+		tabla->mostrarTabla(); 
+		cout << "--------------------------" << endl;
     }
 
     delete tabla;
