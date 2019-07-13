@@ -5,9 +5,11 @@ Se ha desarrollado el juego de "3 en raya" o "Tic Tac Toe", donde la máquina es
 Contenido de las carpetas:
 
   v1-1: Algoritmo minimax No óptimo y sin uso de librería gráfica. Funciona sin ninguna instalación.
-  v1-2: Algoritmo minimax No óptimo y usando la librería gráfica. Incluye la librería SDL que hay que instalar**.
   
+  v1-2: Algoritmo minimax No óptimo y usando la librería gráfica. Incluye la librería SDL que hay que instalar**.
+ 
   v2-1: Algoritmo minimax óptimo y sin uso de librería gráfica. Funciona sin ninguna instalación.
+  
   v2-2: Algoritmo minimax óptimo y usando la librería gráfica. Incluye la librería SDL que hay que instalar**.
   
   
